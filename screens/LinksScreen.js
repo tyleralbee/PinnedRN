@@ -3,12 +3,19 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { Image, Text } from 'react-native';
-
+import { db } from '../config/firebase-config'
 
 const homePlace = { description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } } };
 const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } } };
 
+const handleLocationSelected = (data, details) => {
+
+}
+
 export default class LinksScreen extends React.Component {
+
+
+
   render() {
     return (
       <GooglePlacesAutocomplete
@@ -22,6 +29,16 @@ export default class LinksScreen extends React.Component {
         renderDescription={row => row.description} // custom description render
         onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
           console.log(data, details);
+          db.collection("cities").doc("LA").set({
+            data,
+            details
+          })
+            .then(function () {
+              console.log("Document successfully written!");
+            })
+            .catch(function (error) {
+              console.error("Error writing document: ", error);
+            });
         }}
 
         getDefaultValue={() => ''}
