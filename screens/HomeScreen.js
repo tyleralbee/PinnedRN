@@ -12,15 +12,34 @@ import {
   View,
 } from 'react-native';
 import MapView from 'react-native-maps';
+import { Marker } from 'react-native-maps';
+
+import { becomeUser } from '../actions/users'
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
+
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import { MonoText } from '../components/StyledText';
 
 // NOTES 
 // explore what monotext is 
 
-export default class HomeScreen extends React.Component {
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  mapStyle: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+  },
+});
+
+class HomeScreen extends React.Component {
   state = {
     loading: true,
     location: null,
@@ -29,6 +48,7 @@ export default class HomeScreen extends React.Component {
 
   componentDidMount() {
     this._getLocationAsync()
+    this.props.becomeUser('User1')
   }
 
   _getLocationAsync = async () => {
@@ -40,7 +60,7 @@ export default class HomeScreen extends React.Component {
     }
 
     let location = await Location.getCurrentPositionAsync({});
-    this.setState({ location, loading: false, } , () => console.log(location));
+    this.setState({ location, loading: false, }, () => console.log(location));
   };
 
 
@@ -59,7 +79,15 @@ export default class HomeScreen extends React.Component {
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
               }}
-            />
+            >
+              {/* {this.state.markers.map(marker => (
+                <Marker
+                  coordinate={marker.latlng}
+                  title={marker.title}
+                  description={marker.description}
+                />
+              ))} */}
+            </MapView>
           )
         }
 
@@ -74,15 +102,20 @@ HomeScreen.navigationOptions = {
 };
 
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  mapStyle: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-  },
+
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
 });
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      becomeUser,
+    },
+    dispatch
+  );
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HomeScreen);

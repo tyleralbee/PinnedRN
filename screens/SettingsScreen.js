@@ -13,7 +13,7 @@ import { SearchBar, Button } from 'react-native-elements';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { db } from '../config/firebase-config'
 
-import { becomeUser, BECOME_USER_SUCCESS } from '../actions/users'
+import { becomeUser, BECOME_USER_SUCCESS, addFriend } from '../actions/users'
 // mongodb+srv://tyleralbee:<password>@cluster0-7fkcf.mongodb.net/test?retryWrites=true&w=majority
 
 const styles = EStyleSheet.create({
@@ -22,11 +22,16 @@ const styles = EStyleSheet.create({
   },
 });
 
-function Item({ title, become }) {
+function Item({ title, become, fid, addFriend }) {
+  console.log('title', title)
   return (
     <View style={styles.item}>
       <TouchableOpacity onPress={() => become(title)}>
         <Text style={styles.title}>{title}</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => addFriend(fid)}>
+        <Text style={styles.title}>Add Friend</Text>
       </TouchableOpacity>
     </View>
   );
@@ -36,6 +41,7 @@ class SettingsScreen extends React.Component {
   state = {
     search: '',
     foundUsers: [],
+    friends: this.props.currentUser.friends,
   };
 
   // constructor() {
@@ -44,19 +50,31 @@ class SettingsScreen extends React.Component {
   //   this.handleSearchUser = this.handleSearchUser.bind(this);
   // }
 
+  handlePopulateFriends = () => {
+
+  }
+
   updateSearch = search => {
     this.setState({ search });
   };
 
+  handleAddFriend = (fid) => {
+    this.props.addFriend(this.props.currentUser.id, fid).then(
+      console.log('this.props.users.currentUser added friend', this.props.currentUser)
+    )
+
+  }
+
   handleBecomeUser = (username) => {
     this.props.becomeUser(username).then(
-        console.log('this.props.users.currentUser', this.props.currentUser)
+      console.log('this.props.users.currentUser', this.props.currentUser)
     )
   }
 
   handleCreateUser = () => {
     db.collection("users").doc().set({
       username: this.state.search,
+      friends: []
     }
     )
       .then(function () {
@@ -101,7 +119,7 @@ class SettingsScreen extends React.Component {
   }
 
   render() {
-    const { search, foundUsers } = this.state;
+    const { search, foundUsers, friends } = this.state;
 
     return (
       <View>
@@ -115,7 +133,16 @@ class SettingsScreen extends React.Component {
 
         <FlatList
           data={foundUsers}
-          renderItem={({ item }) => <Item title={item.username} become={this.handleBecomeUser}/>}
+          renderItem={({ item }) => <Item title={item.username} fid={item.id} become={this.handleBecomeUser} addFriend={this.handleAddFriend} />}
+          keyExtractor={item => item.id}
+
+        />
+        <Text>
+          Friends
+        </Text>
+        <FlatList
+          data={friends}
+          renderItem={({ item }) => <Item title={item.username} become={this.handleBecomeUser} />}
           keyExtractor={item => item.id}
 
         />
@@ -134,6 +161,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       becomeUser,
+      addFriend,
     },
     dispatch
   );
