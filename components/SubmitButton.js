@@ -28,11 +28,19 @@ const styles = EStyleSheet.create({
 
 
 const SubmitButton = (props) => {
+    const {
+        type,
+        text,
+        handleSearchUser,
+        handleCreateUser,
+    } = props
+
+
     return (
         <View style={styles.btnContainer}>
-            <TouchableOpacity style={styles.submitBtn}>
+            <TouchableOpacity style={styles.submitBtn} onPress={type === 'create' ? handleCreateUser : handleSearchUser}>
                 <Text style={styles.submitText}>
-                    {props.text}
+                    {text}
                 </Text>
             </TouchableOpacity>
         </View>

@@ -7,6 +7,12 @@ import { Ionicons } from '@expo/vector-icons';
 
 import AppNavigator from './navigation/AppNavigator';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import { Provider } from 'react-redux';
+
+import {
+  store,
+  // AppNavigatorWithNavigationState
+} from './store';
 
 EStyleSheet.build({ // always call EStyleSheet.build() even if you don't use global variables!
   $textColor: '#0275d8'
@@ -25,10 +31,13 @@ export default function App(props) {
     );
   } else {
     return (
-      <View style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <AppNavigator />
-      </View>
+      <Provider store={store}>
+        <View style={styles.container}>
+          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          <AppNavigator />
+        </View>
+      </Provider>
+
     );
   }
 }
