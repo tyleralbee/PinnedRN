@@ -5,10 +5,15 @@ import {
   TouchableOpacity,
   FlatList
 } from 'react-native'
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import SubmitButton from '../components/SubmitButton'
 import { SearchBar, Button } from 'react-native-elements';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { db } from '../config/firebase-config'
+
+import { becomeUser } from '../actions/users'
 // mongodb+srv://tyleralbee:<password>@cluster0-7fkcf.mongodb.net/test?retryWrites=true&w=majority
 
 const styles = EStyleSheet.create({
@@ -17,29 +22,35 @@ const styles = EStyleSheet.create({
   },
 });
 
-function Item({ title }) {
+function Item({ title, become }) {
   return (
     <View style={styles.item}>
-      <Text style={styles.title}>{title}</Text>
+      <TouchableOpacity onPress={() => become(title)}>
+        <Text style={styles.title}>{title}</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
-export default class SettingsScreen extends React.Component {
+class SettingsScreen extends React.Component {
   state = {
     search: '',
     foundUsers: [],
   };
 
-  constructor() {
-    super();
-    this.handleCreateUser = this.handleCreateUser.bind(this);
-    this.handleSearchUser = this.handleSearchUser.bind(this);
-  }
+  // constructor() {
+  //   super();
+  //   this.handleCreateUser = this.handleCreateUser.bind(this);
+  //   this.handleSearchUser = this.handleSearchUser.bind(this);
+  // }
 
   updateSearch = search => {
     this.setState({ search });
   };
+
+  handleBecomeUser = (username) => {
+    this.props.becomeUser(username)
+  }
 
   handleCreateUser = () => {
     db.collection("users").doc().set({
@@ -55,7 +66,9 @@ export default class SettingsScreen extends React.Component {
   }
 
   handleSearchUser = () => {
-    this.setState({foundUsers: []})
+    this.setState({ foundUsers: [] })
+
+    // console.log(this.props.users.currentUser)
 
     db.collection("users").where("username", ">", "")
       .get()
@@ -82,7 +95,7 @@ export default class SettingsScreen extends React.Component {
         console.log("Error getting documents: ", error);
       });
 
-      console.log('this.state.foundUsers', this.state.foundUsers)
+    console.log('this.state.foundUsers', this.state.foundUsers)
   }
 
   render() {
@@ -100,7 +113,7 @@ export default class SettingsScreen extends React.Component {
 
         <FlatList
           data={foundUsers}
-          renderItem={({ item }) => <Item title={item.username} />}
+          renderItem={({ item }) => <Item title={item.username} become={this.handleBecomeUser}/>}
           keyExtractor={item => item.id}
 
         />
@@ -110,3 +123,20 @@ export default class SettingsScreen extends React.Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  users: state.users.currentUser,
+});
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      becomeUser,
+    },
+    dispatch
+  );
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SettingsScreen);

@@ -22,6 +22,7 @@
     "expo-location": "^8.0.0",
     "expo-web-browser": "~8.0.0",
     "firebase": "^7.6.2",
+    "immutability-helper": "^3.0.1",
     "mem": "^6.0.1",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
