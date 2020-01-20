@@ -13,7 +13,7 @@ import { SearchBar, Button } from 'react-native-elements';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { db } from '../config/firebase-config'
 
-import { becomeUser } from '../actions/users'
+import { becomeUser, BECOME_USER_SUCCESS } from '../actions/users'
 // mongodb+srv://tyleralbee:<password>@cluster0-7fkcf.mongodb.net/test?retryWrites=true&w=majority
 
 const styles = EStyleSheet.create({
@@ -49,7 +49,9 @@ class SettingsScreen extends React.Component {
   };
 
   handleBecomeUser = (username) => {
-    this.props.becomeUser(username)
+    this.props.becomeUser(username).then(
+        console.log('this.props.users.currentUser', this.props.currentUser)
+    )
   }
 
   handleCreateUser = () => {
@@ -125,7 +127,7 @@ class SettingsScreen extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  users: state.users.currentUser,
+  currentUser: state.users.currentUser,
 });
 
 const mapDispatchToProps = dispatch =>

@@ -9,7 +9,11 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case BECOME_USER_SUCCESS: {
+
+      console.log('became user ')
       const { payload } = action;
+
+      console.log('setting payload', payload)
 
       return { ...state, currentUser: payload };
     }

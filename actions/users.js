@@ -20,6 +20,14 @@ export const becomeUser = username => async dispatch => {
                         username: doc.data().username,
                     }
 
+                    console.log(obj)
+
+                    console.log('obj', obj)
+                    return dispatch({
+                        type: BECOME_USER_SUCCESS,
+                        payload: obj,
+                    });
+
                     // var joined = this.state.foundUsers.concat(obj);
                     // this.setState({ foundUsers: joined })
 
@@ -31,10 +39,7 @@ export const becomeUser = username => async dispatch => {
                     // }))
                 });
             })
-        return dispatch({
-            type: BECOME_USER_SUCCESS,
-            payload: obj,
-        });
+
     } catch (err) {
         return dispatch({
             type: BECOME_USER_FAILURE,
