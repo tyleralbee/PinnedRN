@@ -1,4 +1,4 @@
-import { AppLoading } from 'expo';
+import AppLoading from 'expo-app-loading';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import React, { useState } from 'react';
@@ -22,6 +22,7 @@ export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
 
   if (!isLoadingComplete && !props.skipLoadingScreen) {
+    console.log('!!')
     return (
       <AppLoading
         startAsync={loadResourcesAsync}
@@ -30,6 +31,8 @@ export default function App(props) {
       />
     );
   } else {
+    console.log('??')
+
     return (
       <Provider store={store}>
         <View style={styles.container}>

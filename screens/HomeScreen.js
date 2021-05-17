@@ -16,7 +16,6 @@ import { Marker } from 'react-native-maps';
 
 import { becomeUser } from '../actions/users'
 import * as Location from 'expo-location';
-import * as Permissions from 'expo-permissions';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -52,7 +51,7 @@ class HomeScreen extends React.Component {
   }
 
   _getLocationAsync = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
       this.setState({
         errorMessage: 'Permission to access location was denied',
