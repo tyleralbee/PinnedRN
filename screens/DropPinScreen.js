@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
-import { ExpoLinksView } from '@expo/samples';
+import { ExpoDropPinView } from '@expo/samples';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { Image, Text } from 'react-native';
 import { db } from '../config/firebase-config'
@@ -12,7 +12,7 @@ const handleLocationSelected = (data, details) => {
 
 }
 
-export default class LinksScreen extends React.Component {
+export default class DropPinScreen extends React.Component {
 
 
 
@@ -90,8 +90,8 @@ export default class LinksScreen extends React.Component {
   }
 }
 
-LinksScreen.navigationOptions = {
-  title: 'Links',
+DropPinScreen.navigationOptions = {
+  title: 'DropPin',
 };
 
 const styles = StyleSheet.create({

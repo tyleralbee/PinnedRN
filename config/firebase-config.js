@@ -2,9 +2,9 @@ import * as firebase from 'firebase';
 import 'firebase/firestore';
 
 firebase.initializeApp({
-  apiKey: 'AIzaSyCRof9eABaLlNKr9r4-Tffl-ZfdKXvK-nA',
-  authDomain: 'pinnedrn-1578548706126.firebaseapp.com',
-  projectId: 'pinnedrn-1578548706126'
+  apiKey: 'AIzaSyB-xcDelvbgAllay6QyFZLc4okGVStkzWs',
+  authDomain: 'pinned21-85f63.firebaseapp.com',
+  projectId: 'pinned21-85f63'
 });
 
 export const db = firebase.firestore();

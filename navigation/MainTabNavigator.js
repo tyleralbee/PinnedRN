@@ -5,8 +5,8 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import DropPinScreen from '../screens/DropPinScreen';
+import FriendsScreen from '../screens/FriendsScreen';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -36,42 +36,42 @@ HomeStack.navigationOptions = {
 
 HomeStack.path = '';
 
-const LinksStack = createStackNavigator(
+const DropPinStack = createStackNavigator(
   {
-    Links: LinksScreen,
+    DropPin: DropPinScreen,
   },
   config
 );
 
-LinksStack.navigationOptions = {
+DropPinStack.navigationOptions = {
   tabBarLabel: 'Drop Pin',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-pin' : 'md-pin'} />
   ),
 };
 
-LinksStack.path = '';
+DropPinStack.path = '';
 
-const SettingsStack = createStackNavigator(
+const FriendsStack = createStackNavigator(
   {
-    Settings: SettingsScreen,
+    Friends: FriendsScreen,
   },
   config
 );
 
-SettingsStack.navigationOptions = {
+FriendsStack.navigationOptions = {
   tabBarLabel: 'Friends',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'} />
   ),
 };
 
-SettingsStack.path = '';
+FriendsStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
-  LinksStack,
-  SettingsStack,
+  DropPinStack,
+  FriendsStack,
 });
 
 tabNavigator.path = '';

@@ -37,11 +37,11 @@ function Item({ title, become, fid, addFriend }) {
   );
 }
 
-class SettingsScreen extends React.Component {
+class FriendsScreen extends React.Component {
   state = {
     search: '',
     foundUsers: [],
-    friends: this.props.currentUser.friends,
+    friends: this.props.currentUser.friends || [],
   };
 
   // constructor() {
@@ -169,4 +169,4 @@ const mapDispatchToProps = dispatch =>
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SettingsScreen);
+)(FriendsScreen);
