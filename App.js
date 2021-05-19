@@ -9,6 +9,16 @@ import AppNavigator from './navigation/AppNavigator';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Provider } from 'react-redux';
 
+// react-navigation 
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+// screens
+import HomeScreen from './screens/HomeScreen';
+import DropPinScreen from './screens/DropPinScreen';
+import FriendsScreen from './screens/FriendsScreen';
+
+
 import {
   store,
   // AppNavigatorWithNavigationState
@@ -18,11 +28,12 @@ EStyleSheet.build({ // always call EStyleSheet.build() even if you don't use glo
   $textColor: '#0275d8'
 });
 
+const Stack = createStackNavigator();
+
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
 
   if (!isLoadingComplete && !props.skipLoadingScreen) {
-    console.log('!!')
     return (
       <AppLoading
         startAsync={loadResourcesAsync}
@@ -31,13 +42,16 @@ export default function App(props) {
       />
     );
   } else {
-    console.log('??')
-
     return (
       <Provider store={store}>
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <AppNavigator />
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName="Home">
+              <Stack.Screen name="Home" component={HomeScreen} />
+              <Stack.Screen name="Drop Pin" component={DropPinScreen} />
+            </Stack.Navigator>
+          </NavigationContainer>
         </View>
       </Provider>
 

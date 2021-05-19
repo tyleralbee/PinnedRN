@@ -5,6 +5,43 @@ export const GET_USER_REQUEST = 'GET_USER_REQUEST';
 export const GET_USER_SUCCESS = 'GET_USER_SUCCESS';
 export const GET_USER_FAILURE = 'GET_USER_FAILURE';
 
+export const SIGN_IN_REQUEST = 'SIGN_IN_REQUEST';
+export const SIGN_IN_SUCCESS = 'SIGN_IN_SUCCESS';
+export const SIGN_IN_FAILURE = 'SIGN_IN_FAILURE';
+
+export const signIn = (email, password) => async dispatch => {
+    dispatch({ type: SIGN_IN_REQUEST });
+
+    try {
+        db.collection("users").where("username", "==", username)
+            .get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    // doc.data() is never undefined for query doc snapshots
+                    obj = {
+                        id: doc.id,
+                        username: doc.data().username,
+                        friends: doc.data().friends,
+                    }
+
+                    console.log(obj)
+
+                    console.log('obj', obj)
+                    return dispatch({
+                        type: SIGN_IN_SUCCESS,
+                        payload: obj,
+                    });
+                });
+            })
+
+    } catch (err) {
+        return dispatch({
+            type: SIGN_IN_FAILURE,
+            payload: err,
+            error: true,
+        });
+    }
+};
 
 export const BECOME_USER_REQUEST = 'BECOME_USER_REQUEST';
 export const BECOME_USER_SUCCESS = 'BECOME_USER_SUCCESS';
