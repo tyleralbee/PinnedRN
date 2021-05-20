@@ -13,30 +13,56 @@ export const signIn = (email, password) => async dispatch => {
     dispatch({ type: SIGN_IN_REQUEST });
 
     try {
-        db.collection("users").where("username", "==", username)
-            .get()
-            .then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    // doc.data() is never undefined for query doc snapshots
-                    obj = {
-                        id: doc.id,
-                        username: doc.data().username,
-                        friends: doc.data().friends,
-                    }
+        firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+        console.log('signed in!')
+          // Signed in
+          var user = userCredential.user;
+          // ...
+        })
+        .catch((error) => {
+            console.log('sign in failure')
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          console.log(errorMessage)
 
-                    console.log(obj)
-
-                    console.log('obj', obj)
-                    return dispatch({
-                        type: SIGN_IN_SUCCESS,
-                        payload: obj,
-                    });
-                });
-            })
-
+        });
     } catch (err) {
         return dispatch({
             type: SIGN_IN_FAILURE,
+            payload: err,
+            error: true,
+        });
+    }
+};
+
+export const CREATE_ACCOUNT_REQUEST = 'CREATE_ACCOUNT_REQUEST';
+export const CREATE_ACCOUNT_SUCCESS = 'CREATE_ACCOUNT_SUCCESS';
+export const CREATE_ACCOUNT_FAILURE = 'CREATE_ACCOUNT_FAILURE';
+
+export const createAccount = (email, password) => async dispatch => {
+    dispatch({ type: CREATE_ACCOUNT_REQUEST });
+
+    try {
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            console.log('created account!')
+          // Signed in 
+          var user = userCredential.user;
+          // ...
+        })
+        .catch((error) => {
+            console.log('create account failure')
+
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          console.log(errorMessage)
+          // ..
+        });
+
+    } catch (err) {
+        return dispatch({
+            type: CREATE_ACCOUNT_FAILURE,
             payload: err,
             error: true,
         });

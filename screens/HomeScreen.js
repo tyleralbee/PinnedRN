@@ -21,9 +21,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { MonoText } from '../components/StyledText';
-
-// NOTES 
 // explore what monotext is 
+
+// actions
+import { signIn, createAccount } from '../actions/users';
 
 const styles = StyleSheet.create({
   container: {
@@ -47,7 +48,10 @@ class HomeScreen extends React.Component {
 
   componentDidMount() {
     this._getLocationAsync()
-    this.props.becomeUser('User1')
+    // this.props.becomeUser('User1')
+    // this.props.createAccount('tyleralbee25@gmail.com', 'pinned');
+    this.props.signIn('tyleralbee25@gmail.com', 'pinned');
+
   }
 
   _getLocationAsync = async () => {
@@ -109,7 +113,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      becomeUser,
+      // becomeUser,
+      signIn,
+      createAccount
     },
     dispatch
   );

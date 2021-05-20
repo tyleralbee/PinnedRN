@@ -3,7 +3,9 @@ import update from 'immutability-helper';
 import {
   BECOME_USER_SUCCESS,
   ADD_FRIEND_SUCCESS,
-  GET_USERS_SUCCESS
+  GET_USERS_SUCCESS,
+  SIGN_IN_SUCCESS,
+  CREATE_ACCOUNT_SUCCESS
 } from '../actions/users';
 
 const initialState = {
@@ -15,6 +17,26 @@ export default (state = initialState, action) => {
     case BECOME_USER_SUCCESS: {
 
       console.log('became user ')
+      const { payload } = action;
+
+      console.log('setting payload', payload)
+
+      return { ...state, currentUser: payload };
+    }
+
+    case SIGN_IN_SUCCESS: {
+
+      console.log('signed in user ')
+      const { payload } = action;
+
+      console.log('setting payload', payload)
+
+      return { ...state, currentUser: payload };
+    }
+
+    case CREATE_ACCOUNT_SUCCESS: {
+
+      console.log('created user ')
       const { payload } = action;
 
       console.log('setting payload', payload)
