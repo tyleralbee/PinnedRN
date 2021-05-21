@@ -4,6 +4,11 @@ import { ExpoDropPinView } from '@expo/samples';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { Image, Text } from 'react-native';
 import { db } from '../config/firebase-config'
+import { createPins } from '../actions/pins';
+
+
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 const homePlace = { description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } } };
 const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } } };
@@ -12,7 +17,7 @@ const handleLocationSelected = (data, details) => {
 
 }
 
-export default class DropPinScreen extends React.Component {
+class DropPinScreen extends React.Component {
 
 
 
@@ -28,17 +33,7 @@ export default class DropPinScreen extends React.Component {
         fetchDetails={true}
         renderDescription={row => row.description} // custom description render
         onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-          console.log(data, details);
-          db.collection("cities").doc("LA").set({
-            data,
-            details
-          })
-            .then(function () {
-              console.log("Document successfully written!");
-            })
-            .catch(function (error) {
-              console.error("Error writing document: ", error);
-            });
+          this.props.createPins(data,details);
         }}
 
         getDefaultValue={() => ''}
@@ -101,3 +96,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 });
+
+const mapStateToProps = state => ({
+  pins: state.pins.pins,
+});
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      // becomeUser,
+      createPins
+    },
+    dispatch
+  );
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DropPinScreen);
