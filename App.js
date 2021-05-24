@@ -47,7 +47,7 @@ export default function App(props) {
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="DropPin">
+            <Stack.Navigator initialRouteName="Home">
               <Stack.Screen name="Home" component={HomeScreen} />
               <Stack.Screen name="DropPin" component={DropPinScreen} />
             </Stack.Navigator>

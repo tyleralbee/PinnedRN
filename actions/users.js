@@ -36,6 +36,29 @@ export const signIn = (email, password) => async dispatch => {
     }
 };
 
+
+export const SIGN_OUT_REQUEST = 'SIGN_OUT_REQUEST';
+export const SIGN_OUT_SUCCESS = 'SIGN_OUT_SUCCESS';
+export const SIGN_OUT_FAILURE = 'SIGN_OUT_FAILURE';
+
+export const signOut = () => async dispatch => {
+    dispatch({ type: SIGN_OUT_REQUEST });
+
+    try {
+        firebase.auth().signOut().then(() => {
+            console.log('sign out success')
+          }).catch((error) => {
+            console.log('sign in failure.', error)
+          });
+    } catch (err) {
+        return dispatch({
+            type: SIGN_OUT_FAILURE,
+            payload: err,
+            error: true,
+        });
+    }
+};
+
 export const CREATE_ACCOUNT_REQUEST = 'CREATE_ACCOUNT_REQUEST';
 export const CREATE_ACCOUNT_SUCCESS = 'CREATE_ACCOUNT_SUCCESS';
 export const CREATE_ACCOUNT_FAILURE = 'CREATE_ACCOUNT_FAILURE';

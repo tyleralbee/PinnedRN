@@ -24,7 +24,7 @@ import { MonoText } from '../components/StyledText';
 // explore what monotext is 
 
 // actions
-import { signIn, createAccount } from '../actions/users';
+import { signIn, createAccount, signOut } from '../actions/users';
 
 const styles = StyleSheet.create({
   container: {
@@ -51,6 +51,8 @@ class HomeScreen extends React.Component {
     // this.props.becomeUser('User1')
     // this.props.createAccount('tyleralbee25@gmail.com', 'pinned');
     this.props.signIn('tyleralbee25@gmail.com', 'pinned');
+    this.props.signOut();
+
 
   }
 
@@ -115,7 +117,8 @@ const mapDispatchToProps = dispatch =>
     {
       // becomeUser,
       signIn,
-      createAccount
+      createAccount,
+      signOut
     },
     dispatch
   );
