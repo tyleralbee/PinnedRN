@@ -19,6 +19,11 @@ export const signIn = (email, password) => async dispatch => {
           // Signed in
           var user = userCredential.user;
           // ...
+
+          return dispatch({
+            type: SIGN_IN_SUCCESS,
+            payload: userCredential,
+        });
         })
         .catch((error) => {
             console.log('sign in failure')

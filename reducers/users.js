@@ -29,7 +29,7 @@ export default (state = initialState, action) => {
       console.log('signed in user ')
       const { payload } = action;
 
-      console.log('setting payload', payload)
+      // console.log('setting payload', payload)
 
       return { ...state, currentUser: payload };
     }

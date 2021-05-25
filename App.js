@@ -17,6 +17,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './screens/HomeScreen';
 import DropPinScreen from './screens/DropPinScreen';
 import FriendsScreen from './screens/FriendsScreen';
+import SignInScreen from './screens/SignInScreen';
 
 
 import {
@@ -47,9 +48,10 @@ export default function App(props) {
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="Home">
+            <Stack.Navigator initialRouteName="SignIn" screenOptions={{headerShown: false}}>
               <Stack.Screen name="Home" component={HomeScreen} />
               <Stack.Screen name="DropPin" component={DropPinScreen} />
+              <Stack.Screen name="SignIn" component={SignInScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         </View>
