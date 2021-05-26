@@ -73,6 +73,11 @@ async function loadResourcesAsync() {
       // We include SpaceMono because we use it in HomeScreen.js. Feel free to
       // remove this if you are not using it in your app
       'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
+      'fira-regular': require('./assets/fonts/FiraSans-Regular.ttf'),
+      // eslint-disable-next-line global-require
+      'fira-bold': require('./assets/fonts/FiraSans-Bold.ttf'),
+      // eslint-disable-next-line global-require
+      'fira-light': require('./assets/fonts/FiraSans-Light.ttf'),
     }),
   ]);
 }
