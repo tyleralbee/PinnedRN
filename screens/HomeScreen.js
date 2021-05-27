@@ -8,6 +8,8 @@ import {
   View,
   TextInput,
 } from 'react-native';
+import Constants from 'expo-constants';
+
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 
@@ -17,12 +19,12 @@ import * as Location from 'expo-location';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { MonoText } from '../components/StyledText';
-// explore what monotext is 
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 // actions
 import { signIn, createAccount, signOut } from '../actions/users';
 import { fontStyles } from '../constants/Fonts';
+import { GOOGLE_PLACES_API_KEY } from '../config/google-config';
 
 import EStyleSheet from 'react-native-extended-stylesheet';
 
@@ -33,13 +35,18 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  gPlaceAutoContainer: {
+    flex: 4,
+    backgroundColor: '#ecf0f1',
+    paddingTop: '4rem',
+    //width: Dimensions.get('window').width,
+  },
   map: {
+    flex: 6,
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
   },
   dropPinBar: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height / 4,
+    flex: 1,
   },
   innerDropPinBar: {
     marginTop: '1rem',
@@ -50,24 +57,6 @@ const styles = EStyleSheet.create({
     borderRadius: 2,
   },
   innerDropPinBarText: {
-    ...fontStyles.firaLight,
-    fontSize: '1rem',
-    color: 'black',
-  },
-  locationBar: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height / 3,
-    justifyContent: 'flex-end'
-  },
-  innerLocationBar: {
-    marginBottom: '1rem',
-    marginHorizontal: '2rem',
-    backgroundColor: '#D3D3D3',
-    padding: '1rem',
-    // paddingLeft: '1rem',
-    borderRadius: 2,
-  },
-  innerLocationBarText: {
     ...fontStyles.firaLight,
     fontSize: '1rem',
     color: 'black',
@@ -124,16 +113,22 @@ class HomeScreen extends React.Component {
             <View>
               {
                 this.state.locationBar ? (
-                  <TouchableOpacity style={styles.locationBar} onPress={this.handleToggleLocationBar}>
-                    <View style={styles.innerLocationBar}>
-                      <TextInput 
-                      style={styles.innerLocationBarText} 
+                  <TouchableOpacity style={styles.gPlaceAutoContainer} onPress={this.handleToggleLocationBar}>
+                    <GooglePlacesAutocomplete
                       autoFocus={true}
-                      placeholder={'Enter the address or search by name...'}
-                      >
-                        
-                      </TextInput>
-                    </View>
+                      placeholder="Search"
+                      query={{
+                        key: GOOGLE_PLACES_API_KEY,
+                        language: 'en', // language of the results
+                      }}
+                      onPress={(data, details = null) => console.log(data)}
+                      onFail={(error) => console.error(error)}
+                      requestUrl={{
+                        url:
+                          'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api',
+                        useOnPlatform: 'web',
+                      }} // this in only required for use on the web. See https://git.io/JflFv more for details.
+                    />
                   </TouchableOpacity>
                 ) : (
                   null
@@ -149,24 +144,28 @@ class HomeScreen extends React.Component {
                 }}
               >
                 {/* {this.state.markers.map(marker => (
-                <Marker
-                  coordinate={marker.latlng}
-                  title={marker.title}
-                  description={marker.description}
-                />
-              ))} */}
+                  <Marker
+                    coordinate={marker.latlng}
+                    title={marker.title}
+                    description={marker.description}
+                  />
+                ))} */}
               </MapView>
+
               {
                 this.state.locationBar ? (
                   null
                 ) : (
-                  <TouchableOpacity style={styles.dropPinBar} onPress={this.handleToggleLocationBar}>
-                    <View style={styles.innerDropPinBar}>
-                      <Text style={styles.innerDropPinBarText}>
-                        Pin a location to your friends...
+                  <>
+
+                    <TouchableOpacity style={styles.dropPinBar} onPress={this.handleToggleLocationBar}>
+                      <View style={styles.innerDropPinBar}>
+                        <Text style={styles.innerDropPinBarText}>
+                          Pin a location to your friends...
                   </Text>
-                    </View>
-                  </TouchableOpacity>
+                      </View>
+                    </TouchableOpacity>
+                  </>
                 )
               }
 

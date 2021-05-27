@@ -66,7 +66,7 @@ class SignInScreen extends React.Component {
     };
 
     componentDidMount() {
-        console.log(this.props.navigation)
+        // console.log(this.props.navigation)
     }
 
 
