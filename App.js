@@ -40,7 +40,7 @@ async function loadResourcesAsync() {
 }
 
 function handleLoadingError(error) {
-  // Implement Sentry
+  // Implement Sentry here
   console.warn(error);
 }
 
