@@ -1,14 +1,10 @@
 import React from 'react';
-import {
-  StyleSheet,
-  ActivityIndicator,
-  View,
-} from 'react-native';
-
+import { ActivityIndicator, View } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   container: {
     flex: 1,
   }
