@@ -4,8 +4,6 @@ import {
     View,
     TouchableOpacity
 } from 'react-native'
-import { ExpoConfigView } from '@expo/samples';
-import { SearchBar, Button } from 'react-native-elements';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 

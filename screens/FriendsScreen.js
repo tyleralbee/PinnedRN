@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import SubmitButton from '../components/SubmitButton'
-import { SearchBar, Button } from 'react-native-elements';
+import { SearchBar } from 'react-native-elements';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { db } from '../config/firebase-config'
 

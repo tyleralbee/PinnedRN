@@ -1,9 +1,7 @@
 import React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
-import { ExpoDropPinView } from '@expo/samples';
+import { StyleSheet } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { Image, Text } from 'react-native';
-import { db } from '../config/firebase-config'
+import { Text } from 'react-native';
 import { createPins } from '../actions/pins';
 
 
@@ -12,10 +10,6 @@ import { bindActionCreators } from 'redux';
 
 const homePlace = { description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } } };
 const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } } };
-
-const handleLocationSelected = (data, details) => {
-
-}
 
 class DropPinScreen extends React.Component {
 

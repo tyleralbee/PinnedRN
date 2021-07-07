@@ -1,11 +1,9 @@
 import React from 'react';
 import {
-    StyleSheet,
     ActivityIndicator,
     View,
     Text,
     KeyboardAvoidingView,
-    Button,
     TextInput,
     TouchableOpacity,
 } from 'react-native';
@@ -15,8 +13,7 @@ import { bindActionCreators } from 'redux';
 
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-import { splashColor } from '../constants/Colors';
-import { signIn, createAccount, signOut } from '../actions/users';
+import { signIn } from '../actions/users';
 
 const styles = EStyleSheet.create({
     container: {

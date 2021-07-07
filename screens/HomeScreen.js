@@ -1,4 +1,3 @@
-import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import {
   Dimensions,
@@ -6,14 +5,9 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   View,
-  TextInput,
 } from 'react-native';
-import Constants from 'expo-constants';
-
 import MapView from 'react-native-maps';
-import Marker from 'react-native-maps';
 
-import { becomeUser } from '../actions/users'
 import * as Location from 'expo-location';
 
 import { connect } from 'react-redux';
@@ -26,7 +20,6 @@ import Geocoder from 'react-native-geocoding';
 import { signIn, createAccount, signOut } from '../actions/users';
 import {
   createPins,
-  CREATE_PINS_SUCCESS,
   getPins,
   GET_PINS_SUCCESS,
 } from '../actions/pins';
