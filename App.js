@@ -8,6 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import AppNavigator from './navigation/AppNavigator';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Provider } from 'react-redux';
+import Geocoder from 'react-native-geocoding';
 
 // react-navigation 
 import { NavigationContainer } from '@react-navigation/native';
@@ -18,6 +19,8 @@ import HomeScreen from './screens/HomeScreen';
 import DropPinScreen from './screens/DropPinScreen';
 import FriendsScreen from './screens/FriendsScreen';
 import SignInScreen from './screens/SignInScreen';
+
+// constants
 
 
 import {

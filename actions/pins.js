@@ -9,23 +9,23 @@ export const GET_PINS_REQUEST = 'GET_PINS_REQUEST';
 export const GET_PINS_SUCCESS = 'GET_PINS_SUCCESS';
 export const GET_PINS_FAILURE = 'GET_PINS_FAILURE';
 
-export const getPins = uids => async dispatch => {
+export const getPins = () => async dispatch => {
     dispatch({ type: GET_PINS_REQUEST });
-    var pinRef = db.collection("pins").where(firebase.firestore.FieldPath.documentId(), "in", uids);
     let pin = {};
     let pins = [];
 
     try {
 
-        await pinRef
-            .get()
+        await firebase.firestore().collection('pins').get()
             .then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
+                    console.log('querySnap')
                     // doc.data() is never undefined for query doc snapshots
                     pin = {
                         id: doc.id,
-                        description: doc.data().description,
-                        geometry: doc.data().geometry,
+                        description: doc.data().desc,
+                        lat: doc.data().lat,
+                        lng: doc.data().lng,
                     }
 
                     pins.push(pin)
@@ -52,30 +52,26 @@ export const CREATE_PINS_REQUEST = 'CREATE_PINS_REQUEST';
 export const CREATE_PINS_SUCCESS = 'CREATE_PINS_SUCCESS';
 export const CREATE_PINS_FAILURE = 'CREATE_PINS_FAILURE';
 
-export const createPins = (data, details) => async dispatch => {
+export const createPins = (pins) => async dispatch => {
     dispatch({ type: CREATE_PINS_REQUEST });
 
     try {
-
-        console.log(data, details);
-        const rando = await uuidv4();
-        console.log(rando)
-
-        db.collection("pins").doc(rando).set({
-            data,
-            details
-        })
-            .then(function () {
-                console.log("Document successfully written!");
-            })
-            .catch(function (error) {
-                console.error("Error writing document: ", error);
+        for (let i=0; i<pins.length; i+=1) {
+            const rando = await uuidv4();
+    
+            db.collection("pins").doc(rando).set(pins[i])
+                .then(function () {
+                    console.log("Document successfully written!");
+                })
+                .catch(function (error) {
+                    console.error("Error writing document: ", error);
+                });
+    
+            return dispatch({
+                type: CREATE_PINS_SUCCESS,
+                payload: pins,
             });
-
-        return dispatch({
-            type: CREATE_PINS_SUCCESS,
-            payload: pins,
-        });
+        }
 
     } catch (err) {
         console.log(err)

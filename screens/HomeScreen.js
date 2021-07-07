@@ -11,7 +11,7 @@ import {
 import Constants from 'expo-constants';
 
 import MapView from 'react-native-maps';
-import { Marker } from 'react-native-maps';
+import Marker from 'react-native-maps';
 
 import { becomeUser } from '../actions/users'
 import * as Location from 'expo-location';
@@ -20,11 +20,19 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import Geocoder from 'react-native-geocoding';
 
 // actions
 import { signIn, createAccount, signOut } from '../actions/users';
+import {
+  createPins,
+  CREATE_PINS_SUCCESS,
+  getPins,
+  GET_PINS_SUCCESS,
+} from '../actions/pins';
+
 import { fontStyles } from '../constants/Fonts';
-import { GOOGLE_PLACES_API_KEY } from '../config/google-config';
+import { GOOGLE_PLACES_API_KEY, GOOGLE_GEOCODING_API_KEY } from '../config/google-config';
 
 import EStyleSheet from 'react-native-extended-stylesheet';
 
@@ -69,20 +77,31 @@ class HomeScreen extends React.Component {
     location: null,
     errorMessage: null,
     locationBar: false,
+    markers: [],
   };
 
-  componentDidMount() {
-    this._getLocationAsync()
+  async componentDidMount() {
+    await this._getLocationAsync()
     // this.props.becomeUser('User1')
     // this.props.createAccount('tyleralbee25@gmail.com', 'pinned');
-    this.props.signIn('tyleralbee25@gmail.com', 'pinned');
-    this.props.signOut();
+    // this.props.signIn('tyleralbee25@gmail.com', 'pinned');
+    // this.props.signOut();
+    await this.props.getPins()
+      .then(res => {
+        if (res.type === GET_PINS_SUCCESS) {
+          // console.log('success in func ', res.payload)
+        } else {
+          console.log('fail func')
+        }
+      })
 
-
+    console.log('success redux', this.props.pins)
+    this.setState({ markers: this.props.pins, loading: false })
   }
-
+ty
   _getLocationAsync = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
+
     if (status !== 'granted') {
       this.setState({
         errorMessage: 'Permission to access location was denied',
@@ -90,7 +109,7 @@ class HomeScreen extends React.Component {
     }
 
     let location = await Location.getCurrentPositionAsync({});
-    this.setState({ location, loading: false, }, () => console.log(location));
+    this.setState({ location });
   };
 
   handleToggleLocationBar = () => {
@@ -100,6 +119,35 @@ class HomeScreen extends React.Component {
         locationBar: !prevState.locationBar
       }
     })
+  }
+
+  handleLocationSelected = async data => {
+    console.log('data', data)
+    Geocoder.init(GOOGLE_GEOCODING_API_KEY);
+    let pins = []
+
+    let pin = {
+      desc: data.description || '',
+      lat: '',
+      lng: ''
+    }
+
+    await Geocoder.from(data.description)
+      .then(json => {
+        var location = json.results[0].geometry.location;
+        pin.lat = location.lat
+        pin.lng = location.lng
+      })
+      .catch(error => console.warn(error));
+
+    pins.push(pin);
+
+    await this.props.createPins(pins)
+      .then(res => {
+        if (res.type === 'CREATE_PINS_SUCCESS') {
+          console.log('back in function success')
+        }
+      })
   }
 
 
@@ -121,7 +169,7 @@ class HomeScreen extends React.Component {
                         key: GOOGLE_PLACES_API_KEY,
                         language: 'en', // language of the results
                       }}
-                      onPress={(data, details = null) => console.log(data)}
+                      onPress={(data, details = null) => this.handleLocationSelected(data)}
                       onFail={(error) => console.error(error)}
                       requestUrl={{
                         url:
@@ -143,14 +191,21 @@ class HomeScreen extends React.Component {
                   longitudeDelta: 0.0421,
                 }}
               >
-                {/* {this.state.markers.map(marker => (
-                  <Marker
-                    coordinate={marker.latlng}
-                    title={marker.title}
-                    description={marker.description}
+              {this.state.markers.map(marker => {
+                console.log('marker', marker)
+                return                   (
+                  <MapView.Marker
+                    coordinate={{ longitude : marker.lng, latitude : marker.lat  }}
+                    title={marker.desc}
+                    description={marker.desc}
+                    key={marker.id}
                   />
-                ))} */}
+                )
+              }
+
+                )}
               </MapView>
+
 
               {
                 this.state.locationBar ? (
@@ -188,6 +243,7 @@ HomeScreen.navigationOptions = {
 
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
+  pins: state.pins.pins,
 });
 
 const mapDispatchToProps = dispatch =>
@@ -196,7 +252,9 @@ const mapDispatchToProps = dispatch =>
       // becomeUser,
       signIn,
       createAccount,
-      signOut
+      signOut,
+      createPins,
+      getPins,
     },
     dispatch
   );
