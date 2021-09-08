@@ -28,6 +28,7 @@ import { fontStyles } from '../constants/Fonts';
 import { GOOGLE_PLACES_API_KEY, GOOGLE_GEOCODING_API_KEY } from '../config/google-config';
 
 import EStyleSheet from 'react-native-extended-stylesheet';
+import PinLocationBar from '../components/PinLocationBar';
 
 const styles = EStyleSheet.create({
   container: {
@@ -91,7 +92,7 @@ class HomeScreen extends React.Component {
     console.log('success redux', this.props.pins)
     this.setState({ markers: this.props.pins, loading: false })
   }
-ty
+
   _getLocationAsync = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
 
@@ -143,96 +144,65 @@ ty
       })
   }
 
-
   render() {
     return (
       <View style={styles.container}>
-        {this.state.loading ?
-          (<ActivityIndicator />)
-          :
-          (
-            <View>
-              {
-                this.state.locationBar ? (
-                  <TouchableOpacity style={styles.gPlaceAutoContainer} onPress={this.handleToggleLocationBar}>
-                    <GooglePlacesAutocomplete
-                      autoFocus={true}
-                      placeholder="Search"
-                      query={{
-                        key: GOOGLE_PLACES_API_KEY,
-                        language: 'en', // language of the results
-                      }}
-                      onPress={(data, details = null) => this.handleLocationSelected(data)}
-                      onFail={(error) => console.error(error)}
-                      requestUrl={{
-                        url:
-                          'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api',
-                        useOnPlatform: 'web',
-                      }} // this in only required for use on the web. See https://git.io/JflFv more for details.
-                    />
-                  </TouchableOpacity>
-                ) : (
-                  null
-                )
-              }
-              <MapView
-                style={styles.map}
-                initialRegion={{
-                  latitude: this.state.location.coords.latitude,
-                  longitude: this.state.location.coords.longitude,
-                  latitudeDelta: 0.0922,
-                  longitudeDelta: 0.0421,
-                }}
-              >
+        {this.state.loading ? (<ActivityIndicator />) : (
+          <View>
+            {this.state.locationBar ? (
+                <TouchableOpacity style={styles.gPlaceAutoContainer} onPress={this.handleToggleLocationBar}>
+                  <GooglePlacesAutocomplete
+                    autoFocus={true}
+                    placeholder="Search"
+                    query={{
+                      key: GOOGLE_PLACES_API_KEY,
+                      language: 'en', // language of the results
+                    }}
+                    onPress={(data, details = null) => this.handleLocationSelected(data)}
+                    onFail={(error) => console.error(error)}
+                    requestUrl={{
+                      url:
+                        'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api',
+                      useOnPlatform: 'web',
+                    }} // this in only required for use on the web. See https://git.io/JflFv more for details.
+                  />
+                </TouchableOpacity>
+              ) : (null)
+            }
+            <MapView
+              style={styles.map}
+              initialRegion={{
+                latitude: this.state.location.coords.latitude,
+                longitude: this.state.location.coords.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+            >
               {this.state.markers.map(marker => {
-                console.log('marker', marker)
-                return                   (
+                return (
                   <MapView.Marker
-                    coordinate={{ longitude : marker.lng, latitude : marker.lat  }}
+                    coordinate={{ longitude: marker.lng, latitude: marker.lat }}
                     title={marker.desc}
                     description={marker.desc}
                     key={marker.id}
                   />
                 )
-              }
-
-                )}
-              </MapView>
-
-
-              {
-                this.state.locationBar ? (
-                  null
-                ) : (
-                  <>
-
-                    <TouchableOpacity style={styles.dropPinBar} onPress={this.handleToggleLocationBar}>
-                      <View style={styles.innerDropPinBar}>
-                        <Text style={styles.innerDropPinBarText}>
-                          Pin a location to your friends...
-                  </Text>
-                      </View>
-                    </TouchableOpacity>
-                  </>
-                )
-              }
-
-            </View>
-
-          )
-        }
+              })}
+            </MapView>
+            {this.state.locationBar ? (null) : (
+              <PinLocationBar handlePress={this.handleToggleLocationBar}/>
+            )}
+          </View>
+          )}
 
       </View>
     );
-
   }
 }
 
 HomeScreen.navigationOptions = {
   header: null,
 };
-
-
 
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,

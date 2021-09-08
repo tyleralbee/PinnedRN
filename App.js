@@ -65,7 +65,7 @@ export default function App(props) {
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="SignIn" screenOptions={{headerShown: false}}>
+            <Stack.Navigator initialRouteName="Home" screenOptions={{headerShown: false}}>
               <Stack.Screen name="Home" component={HomeScreen} />
               <Stack.Screen name="DropPin" component={DropPinScreen} />
               <Stack.Screen name="SignIn" component={SignInScreen} />
