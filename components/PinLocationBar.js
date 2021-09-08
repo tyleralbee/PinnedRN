@@ -10,19 +10,24 @@ import { fontStyles } from '../constants/Fonts';
 
 const styles = EStyleSheet.create({
     dropPinBar: {
-        flex: 1,
+        position: 'absolute',// use absolute position to show button on top of the map
+        top: '88%', // for bottom align
+        alignSelf: 'center', // for align to right
+        backgroundColor: 'white',
+        width: '100%',
+        alignItems: 'center', // align text to center
+        paddingBottom: '100%'
     },
     innerDropPinBar: {
         marginTop: '1rem',
         marginHorizontal: '2rem',
         backgroundColor: '#D3D3D3',
         padding: '1rem',
-        paddingLeft: '1rem',
         borderRadius: 2,
     },
     innerDropPinBarText: {
-        ...fontStyles.firaLight,
-        fontSize: '1rem',
+        ...fontStyles.firaRegular,
+        fontSize: '1.3rem',
         color: 'black',
     },
 });

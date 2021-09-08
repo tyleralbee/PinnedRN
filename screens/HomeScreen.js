@@ -13,7 +13,6 @@ import * as Location from 'expo-location';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Geocoder from 'react-native-geocoding';
 
 // actions
@@ -29,39 +28,15 @@ import { GOOGLE_PLACES_API_KEY, GOOGLE_GEOCODING_API_KEY } from '../config/googl
 
 import EStyleSheet from 'react-native-extended-stylesheet';
 import PinLocationBar from '../components/PinLocationBar';
+import SearchLocationBar from '../components/SearchLocationBar';
 
 const styles = EStyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  gPlaceAutoContainer: {
-    flex: 4,
-    backgroundColor: '#ecf0f1',
-    paddingTop: '4rem',
-    //width: Dimensions.get('window').width,
   },
   map: {
-    flex: 6,
-    width: Dimensions.get('window').width,
-  },
-  dropPinBar: {
-    flex: 1,
-  },
-  innerDropPinBar: {
-    marginTop: '1rem',
-    marginHorizontal: '2rem',
-    backgroundColor: '#D3D3D3',
-    padding: '1rem',
-    paddingLeft: '1rem',
-    borderRadius: 2,
-  },
-  innerDropPinBarText: {
-    ...fontStyles.firaLight,
-    fontSize: '1rem',
-    color: 'black',
+    ...EStyleSheet.absoluteFillObject,
   },
 });
 
@@ -148,27 +123,10 @@ class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         {this.state.loading ? (<ActivityIndicator />) : (
-          <View>
-            {this.state.locationBar ? (
-                <TouchableOpacity style={styles.gPlaceAutoContainer} onPress={this.handleToggleLocationBar}>
-                  <GooglePlacesAutocomplete
-                    autoFocus={true}
-                    placeholder="Search"
-                    query={{
-                      key: GOOGLE_PLACES_API_KEY,
-                      language: 'en', // language of the results
-                    }}
-                    onPress={(data, details = null) => this.handleLocationSelected(data)}
-                    onFail={(error) => console.error(error)}
-                    requestUrl={{
-                      url:
-                        'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api',
-                      useOnPlatform: 'web',
-                    }} // this in only required for use on the web. See https://git.io/JflFv more for details.
-                  />
-                </TouchableOpacity>
-              ) : (null)
-            }
+          <>
+            {/* {!this.state.locationBar ? (null) : (
+              
+            )} */}
             <MapView
               style={styles.map}
               initialRegion={{
@@ -189,11 +147,13 @@ class HomeScreen extends React.Component {
                 )
               })}
             </MapView>
-            {this.state.locationBar ? (null) : (
-              <PinLocationBar handlePress={this.handleToggleLocationBar}/>
+            {this.state.locationBar ? (
+              <SearchLocationBar handlePress={this.handleToggleLocationBar} handleLocationSelected={this.handleLocationSelected}/>
+            ) : (
+              <PinLocationBar handlePress={this.handleToggleLocationBar} />
             )}
-          </View>
-          )}
+          </>
+        )}
 
       </View>
     );
