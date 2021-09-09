@@ -26,7 +26,7 @@ const styles = EStyleSheet.create({
         borderRadius: 2,
     },
     innerDropPinBarText: {
-        ...fontStyles.firaRegular,
+        ...fontStyles.firaLight,
         fontSize: '1.3rem',
         color: 'black',
     },

@@ -16,9 +16,9 @@ const styles = EStyleSheet.create({
         backgroundColor: 'white',
         width: '100%',
         alignItems: 'center', // align text to center
-        top: '10%', // for bottom align
+        top: '0%', // for bottom align
         alignItems: 'center', // align text to center
-      },
+    },
 });
 
 
@@ -32,7 +32,9 @@ const SearchLocationBar = (props) => {
     return (
         <TouchableOpacity style={styles.gPlaceAutoContainer} onPress={() => handlePress()}>
             <GooglePlacesAutocomplete
-                autoFocus={true}
+                textInputProps={{
+                    autoFocus: true,
+                }}
                 placeholder="Search"
                 query={{
                     key: GOOGLE_PLACES_API_KEY,
@@ -46,19 +48,27 @@ const SearchLocationBar = (props) => {
                     useOnPlatform: 'web',
                 }} // this in only required for use on the web. See https://git.io/JflFv more for details.
                 styles={{
+                    container: {
+                        paddingTop: '15%',
+                        paddingBottom: 5,
+                        paddingHorizontal: '5%',
+                        backgroundColor: 'white',
+                    },
                     textInputContainer: {
-                      width: '100%',
+                        width: '100%',
+
                     },
                     textInput: {
-                      height: 38,
-                      color: '#5d5d5d',
-                      fontSize: 16,
-                      
+                        height: 38,
+                        color: 'black',
+                        fontSize: 16,
+                        backgroundColor: '#D3D3D3',
+
                     },
                     predefinedPlacesDescription: {
-                      color: '#1faadb',
+                        color: '#1faadb',
                     },
-                  }}
+                }}
             />
         </TouchableOpacity>
     );

@@ -16,6 +16,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { store } from './store';
+import ProfileScreen from './screens/ProfileScreen';
 
 EStyleSheet.build({ $textColor: '#0275d8' });
 
@@ -69,6 +70,7 @@ export default function App(props) {
               <Stack.Screen name="Home" component={HomeScreen} />
               <Stack.Screen name="DropPin" component={DropPinScreen} />
               <Stack.Screen name="SignIn" component={SignInScreen} />
+              <Stack.Screen name="Profile" component={ProfileScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         </View>

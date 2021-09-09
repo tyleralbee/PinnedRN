@@ -29,6 +29,7 @@ import { GOOGLE_PLACES_API_KEY, GOOGLE_GEOCODING_API_KEY } from '../config/googl
 import EStyleSheet from 'react-native-extended-stylesheet';
 import PinLocationBar from '../components/PinLocationBar';
 import SearchLocationBar from '../components/SearchLocationBar';
+import ProfileButton from '../components/ProfileButton';
 
 const styles = EStyleSheet.create({
   container: {
@@ -124,9 +125,6 @@ class HomeScreen extends React.Component {
       <View style={styles.container}>
         {this.state.loading ? (<ActivityIndicator />) : (
           <>
-            {/* {!this.state.locationBar ? (null) : (
-              
-            )} */}
             <MapView
               style={styles.map}
               initialRegion={{
@@ -147,6 +145,7 @@ class HomeScreen extends React.Component {
                 )
               })}
             </MapView>
+            <ProfileButton handlePress={this.props.navigation.navigate}/>
             {this.state.locationBar ? (
               <SearchLocationBar handlePress={this.handleToggleLocationBar} handleLocationSelected={this.handleLocationSelected}/>
             ) : (
