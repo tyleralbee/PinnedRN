@@ -1,5 +1,6 @@
 import { db } from '../config/firebase-config'
 import firebase from 'firebase'
+
 import 'react-native-get-random-values';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -26,6 +27,7 @@ export const getPins = () => async dispatch => {
                         description: doc.data().desc,
                         lat: doc.data().lat,
                         lng: doc.data().lng,
+                        comments: doc.data().comments,
                     }
 
                     pins.push(pin)
@@ -56,9 +58,9 @@ export const createPins = (pins) => async dispatch => {
     dispatch({ type: CREATE_PINS_REQUEST });
 
     try {
-        for (let i=0; i<pins.length; i+=1) {
+        for (let i = 0; i < pins.length; i += 1) {
             const rando = await uuidv4();
-    
+
             db.collection("pins").doc(rando).set(pins[i])
                 .then(function () {
                     console.log("Document successfully written!");
@@ -66,7 +68,7 @@ export const createPins = (pins) => async dispatch => {
                 .catch(function (error) {
                     console.error("Error writing document: ", error);
                 });
-    
+
             return dispatch({
                 type: CREATE_PINS_SUCCESS,
                 payload: pins,
@@ -77,6 +79,31 @@ export const createPins = (pins) => async dispatch => {
         console.log(err)
         return dispatch({
             type: CREATE_PINS_FAILURE,
+            payload: err,
+            error: true,
+        });
+    }
+};
+
+export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
+export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
+export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
+
+export const addComment = (pinId, comment) => async dispatch => {
+    dispatch({ type: ADD_COMMENT_REQUEST });
+    const pinRef = db.collection('pins').doc(pinId);
+
+    try {
+        await pinRef.update({
+            comments: firebase.firestore.FieldValue.arrayUnion(comment)
+        }).then(res => dispatch({
+            type: ADD_COMMENT_SUCCESS,
+        }))
+
+    } catch (err) {
+        console.log(err)
+        return dispatch({
+            type: ADD_COMMENT_FAILURE,
             payload: err,
             error: true,
         });

@@ -8,7 +8,8 @@ import {
 } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { fontStyles } from '../constants/Fonts';
-
+import PostCommentButton from './PostCommentButton';
+import Comment from './Comment';
 
 
 const styles = EStyleSheet.create({
@@ -19,8 +20,8 @@ const styles = EStyleSheet.create({
         width: '23rem',
         height: '22rem',
         left: '5%',
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: 'flex-start',
+        // alignItems: 'flex-start',
         borderRadius: 4,
         backgroundColor: 'white',
     },
@@ -34,7 +35,7 @@ const styles = EStyleSheet.create({
         // paddingTop: '1rem',
         borderColor: 'black',
         borderWidth: 1,
-        width: '23rem',
+        width: '21rem',
         height: '3rem',
         left: '5%',
         color: 'grey',
@@ -42,31 +43,38 @@ const styles = EStyleSheet.create({
         alignItems: 'center',
         borderRadius: 4,
         backgroundColor: 'white',
+    },
+    addComment: {
+        flexDirection: 'row',
+        marginHorizontal: '1rem',
     }
 });
 
 
 const CommentsSection = (props) => {
     const {
-        handlePress
+        handleChange,
+        handleAddComment,
+        comments
     } = props
 
 
     return (
-        <KeyboardAvoidingView 
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.container}
         >
 
             <View style={styles.commentsSection} onPress={() => console.log('Comments Section')}>
-                <Text style={styles.pinPictureText}>
-                    Comments section
-                </Text>
-            </View>
+                {comments.length ? (comments.map(comment =>
+                    <Comment comment={comment} />)) : (<Text> There are no comments.</Text>)}
 
-            <TextInput style={styles.textInput}>
-                Write a comment...
-            </TextInput>
+
+            </View>
+            <View style={styles.addComment}>
+                <TextInput placeholder={'Write a comment...'} style={styles.textInput} onChangeText={comment => handleChange('comment', comment)} />
+                <PostCommentButton handlePress={handleAddComment} />
+            </View>
         </KeyboardAvoidingView>
     );
 };

@@ -8,7 +8,7 @@ import PinPicture from '../components/PinPicture';
 import LikeButton from '../components/LIkeButton';
 import PeopleIndicator from '../components/PeopleIndicator';
 import CommentsSection from '../components/CommentsSection';
-import { ScrollView } from 'react-native-gesture-handler';
+import { addComment } from '../actions/pins';
 
 const styles = EStyleSheet.create({
     container: {
@@ -47,24 +47,40 @@ const styles = EStyleSheet.create({
 class ViewPinScreen extends React.Component {
     state = {
         loading: false,
+        comment: '',
     };
 
     componentDidMount() {
 
     }
 
+    handleChange = (field, value) =>
+        this.setState(prevState => ({
+            ...prevState,
+            [field]: value
+        }))
+
+    handleAddComment = async () => {
+        const {
+            marker
+        } = this.props.route.params
+
+        await this.props.addComment(marker.id, this.state.comment).then(res => console.log('res in fun, ', res))
+
+        console.log('end of func')
+    }
+
 
     render() {
-        console.log(this.props.route)
         const {
             marker
         } = this.props.route.params
 
         return (
-            <KeyboardAvoidingView 
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
 
-            style={styles.container}>
+                style={styles.container}>
                 {this.state.loading ?
                     (<ActivityIndicator />) : (
                         <View style={styles.container}>
@@ -82,7 +98,7 @@ class ViewPinScreen extends React.Component {
                                 <PeopleIndicator />
                                 <LikeButton />
                             </View>
-                            <CommentsSection/>
+                            <CommentsSection comments={marker.comments} handleChange={this.handleChange} handleAddComment={this.handleAddComment}/>
                         </View>
                     )}
             </KeyboardAvoidingView>
@@ -97,6 +113,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
     bindActionCreators(
         {
+            addComment
         },
         dispatch
     );

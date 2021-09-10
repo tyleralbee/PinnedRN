@@ -99,7 +99,8 @@ class HomeScreen extends React.Component {
     let pin = {
       desc: data.description || '',
       lat: '',
-      lng: ''
+      lng: '',
+      comments: []
     }
 
     await Geocoder.from(data.description)
