@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { fontStyles } from '../constants/Fonts';
+import ProfilePicture from '../components/ProfilePicture';
 
 const styles = EStyleSheet.create({
     container: {
@@ -40,11 +41,16 @@ class ProfileScreen extends React.Component {
             <View style={styles.container}>
                 {this.state.loading ?
                     (<ActivityIndicator />) : (
+                        <View style={styles.container}>
+
                         <TouchableOpacity style={styles.xButton} onPress={() => this.props.navigation.navigate('Home')}>
                             <Text style={styles.xButtonText}>
                                 Back
                             </Text>
                         </TouchableOpacity>
+                        
+                        <ProfilePicture/>
+                        </View>
                     )}
             </View>
         );

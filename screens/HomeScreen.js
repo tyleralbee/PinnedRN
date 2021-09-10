@@ -141,6 +141,7 @@ class HomeScreen extends React.Component {
                     title={marker.desc}
                     description={marker.desc}
                     key={marker.id}
+                    onPress={() => this.props.navigation.navigate('ViewPin', { marker })}
                   />
                 )
               })}
