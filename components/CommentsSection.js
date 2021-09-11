@@ -67,7 +67,7 @@ const CommentsSection = (props) => {
 
             <View style={styles.commentsSection} onPress={() => console.log('Comments Section')}>
                 {comments.length ? (comments.map(comment =>
-                    <Comment comment={comment} />)) : (<Text> There are no comments.</Text>)}
+                    <Comment key={comment.id} comment={comment.value} />)) : (<Text> There are no comments.</Text>)}
 
 
             </View>

@@ -92,10 +92,16 @@ export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 export const addComment = (pinId, comment) => async dispatch => {
     dispatch({ type: ADD_COMMENT_REQUEST });
     const pinRef = db.collection('pins').doc(pinId);
+    const rando = await uuidv4();
+
+    commentObj = {
+        value: comment,
+        id: rando
+    }
 
     try {
         await pinRef.update({
-            comments: firebase.firestore.FieldValue.arrayUnion(comment)
+            comments: firebase.firestore.FieldValue.arrayUnion(commentObj)
         }).then(res => dispatch({
             type: ADD_COMMENT_SUCCESS,
         }))
