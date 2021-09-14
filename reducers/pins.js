@@ -6,7 +6,7 @@ import {
 } from '../actions/pins';
 
 const initialState = {
-  users: [],
+  pins: [],
 };
 
 export default (state = initialState, action) => {
@@ -15,19 +15,21 @@ export default (state = initialState, action) => {
     case CREATE_PINS_SUCCESS: {
 
       console.log('created pin(s) ')
+      console.log('action', action)
       const { payload } = action;
+    
+      const pins = [...state.pins, ...payload]
+      console.log('setting pins', pins)
 
-      console.log('setting pins', [...state.arr, payload])
-
-      return { ...state, pins: [...state.arr, payload] };
+      return { ...state, pins: pins };
     }
 
     case GET_PINS_SUCCESS: {
-      console.log('getting pins')
+      // console.log('getting pins')
       const { payload } = action;
 
 
-      console.log('setting payload', payload)
+      // console.log('setting payload', payload)
 
       return { ...state, pins: payload };
 

@@ -23,7 +23,7 @@ export const getPins = () => async dispatch => {
                     console.log('querySnap')
                     // doc.data() is never undefined for query doc snapshots
                     pin = {
-                        id: doc.id,
+                        id: doc.data().id,
                         description: doc.data().desc,
                         lat: doc.data().lat,
                         lng: doc.data().lng,
@@ -59,9 +59,7 @@ export const createPins = (pins) => async dispatch => {
 
     try {
         for (let i = 0; i < pins.length; i += 1) {
-            const rando = await uuidv4();
-
-            db.collection("pins").doc(rando).set(pins[i])
+            db.collection("pins").doc(pins[i].id).set(pins[i])
                 .then(function () {
                     console.log("Document successfully written!");
                 })

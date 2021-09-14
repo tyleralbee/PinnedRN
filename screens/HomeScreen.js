@@ -31,6 +31,9 @@ import PinLocationBar from '../components/PinLocationBar';
 import SearchLocationBar from '../components/SearchLocationBar';
 import ProfileButton from '../components/ProfileButton';
 
+import { v4 as uuidv4 } from 'uuid';
+
+
 const styles = EStyleSheet.create({
   container: {
     flex: 1,
@@ -47,7 +50,6 @@ class HomeScreen extends React.Component {
     location: null,
     errorMessage: null,
     locationBar: false,
-    markers: [],
   };
 
   async componentDidMount() {
@@ -65,8 +67,7 @@ class HomeScreen extends React.Component {
         }
       })
 
-    console.log('success redux', this.props.pins)
-    this.setState({ markers: this.props.pins, loading: false })
+    this.setState({ loading: false })
   }
 
   _getLocationAsync = async () => {
@@ -93,6 +94,8 @@ class HomeScreen extends React.Component {
 
   handleLocationSelected = async data => {
     console.log('data', data)
+    const rando = await uuidv4();
+
     Geocoder.init(GOOGLE_GEOCODING_API_KEY);
     let pins = []
 
@@ -100,7 +103,8 @@ class HomeScreen extends React.Component {
       desc: data.description || '',
       lat: '',
       lng: '',
-      comments: []
+      comments: [],
+      id: rando
     }
 
     await Geocoder.from(data.description)
@@ -115,6 +119,7 @@ class HomeScreen extends React.Component {
 
     await this.props.createPins(pins)
       .then(res => {
+        console.log('res', res)
         if (res.type === 'CREATE_PINS_SUCCESS') {
           console.log('back in function success')
         }
@@ -135,14 +140,14 @@ class HomeScreen extends React.Component {
                 longitudeDelta: 0.0421,
               }}
             >
-              {this.state.markers.map(marker => {
+              {this.props.pins.map(pin => {
                 return (
                   <MapView.Marker
-                    coordinate={{ longitude: marker.lng, latitude: marker.lat }}
-                    title={marker.desc}
-                    description={marker.desc}
-                    key={marker.id}
-                    onPress={() => this.props.navigation.navigate('ViewPin', { marker })}
+                    coordinate={{ longitude: pin.lng, latitude: pin.lat }}
+                    title={pin.desc}
+                    description={pin.desc}
+                    key={pin.id}
+                    onPress={() => this.props.navigation.navigate('ViewPin', { pin })}
                   />
                 )
               })}
