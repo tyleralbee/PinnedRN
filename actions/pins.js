@@ -5,6 +5,15 @@ import 'react-native-get-random-values';
 
 import { v4 as uuidv4 } from 'uuid';
 
+// ------------------------------------------------
+
+export const SELECT_PIN = 'SELECT_PIN';
+
+export const selectPin = pinId => async dispatch => {
+    console.log('selectPin action with pin' , pinId)
+    return dispatch({ type: SELECT_PIN, pinId });
+};
+
 // also used to update redux store during addFriend, 
 export const GET_PINS_REQUEST = 'GET_PINS_REQUEST';
 export const GET_PINS_SUCCESS = 'GET_PINS_SUCCESS';
@@ -20,7 +29,6 @@ export const getPins = () => async dispatch => {
         await firebase.firestore().collection('pins').get()
             .then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
-                    console.log('querySnap')
                     // doc.data() is never undefined for query doc snapshots
                     pin = {
                         id: doc.data().id,
@@ -33,8 +41,6 @@ export const getPins = () => async dispatch => {
                     pins.push(pin)
                 });
             })
-
-        console.log('getPins returns ', pins)
 
         return dispatch({
             type: GET_PINS_SUCCESS,
@@ -61,10 +67,10 @@ export const createPins = (pins) => async dispatch => {
         for (let i = 0; i < pins.length; i += 1) {
             db.collection("pins").doc(pins[i].id).set(pins[i])
                 .then(function () {
-                    console.log("Document successfully written!");
+                    console.log("Created pins!");
                 })
                 .catch(function (error) {
-                    console.error("Error writing document: ", error);
+                    console.error("Error creating pins: ", error);
                 });
 
             return dispatch({
@@ -74,7 +80,7 @@ export const createPins = (pins) => async dispatch => {
         }
 
     } catch (err) {
-        console.log(err)
+        console.log('err in create pins', err)
         return dispatch({
             type: CREATE_PINS_FAILURE,
             payload: err,
@@ -94,18 +100,28 @@ export const addComment = (pinId, comment) => async dispatch => {
 
     commentObj = {
         value: comment,
-        id: rando
+        id: rando,
+        pinId: pinId
     }
 
     try {
         await pinRef.update({
             comments: firebase.firestore.FieldValue.arrayUnion(commentObj)
-        }).then(res => dispatch({
-            type: ADD_COMMENT_SUCCESS,
-        }))
+        }).then(res => {
+            console.log('Add comment returns res ', res)
+            dispatch({
+                comment: commentObj,
+                type: ADD_COMMENT_SUCCESS,
+            })
+
+            return dispatch({
+                pinId,
+                type: SELECT_PIN,
+            })
+        })
 
     } catch (err) {
-        console.log(err)
+        console.log('err in add comment', err)
         return dispatch({
             type: ADD_COMMENT_FAILURE,
             payload: err,

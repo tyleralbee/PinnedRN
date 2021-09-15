@@ -10,6 +10,8 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import { fontStyles } from '../constants/Fonts';
 import PostCommentButton from './PostCommentButton';
 import Comment from './Comment';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 
 const styles = EStyleSheet.create({
@@ -51,32 +53,46 @@ const styles = EStyleSheet.create({
 });
 
 
-const CommentsSection = (props) => {
-    const {
-        handleChange,
-        handleAddComment,
-        comments
-    } = props
+class CommentsSection extends React.Component {
 
-
-    return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.container}
-        >
-
-            <View style={styles.commentsSection} onPress={() => console.log('Comments Section')}>
-                {comments.length ? (comments.map(comment =>
-                    <Comment key={comment.id} comment={comment.value} />)) : (<Text> There are no comments.</Text>)}
-
-
-            </View>
-            <View style={styles.addComment}>
-                <TextInput placeholder={'Write a comment...'} style={styles.textInput} onChangeText={comment => handleChange('comment', comment)} />
-                <PostCommentButton handlePress={handleAddComment} />
-            </View>
-        </KeyboardAvoidingView>
-    );
+    render() {
+        const {
+            handleChange,
+            handleAddComment,
+        } = this.props
+        return (
+            <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                style={styles.container}
+            >
+    
+                <View style={styles.commentsSection} onPress={() => console.log('Comments Section')}>
+                    {this.props.selectedPin.comments.length ? (this.props.selectedPin.comments.map(comment =>
+                        <Comment key={comment.id} comment={comment.value} />)) : (<Text> There are no comments.</Text>)}
+                </View>
+                <View style={styles.addComment}>
+                    <TextInput placeholder={'Write a comment...'} style={styles.textInput} onChangeText={comment => handleChange('comment', comment)} />
+                    <PostCommentButton handlePress={handleAddComment} />
+                </View>
+            </KeyboardAvoidingView>
+        )
+    }
 };
 
-export default CommentsSection
+const mapStateToProps = state => ({
+    pins: state.pins.pins,
+    selectedPin: state.pins.selectedPin
+});
+
+const mapDispatchToProps = dispatch =>
+    bindActionCreators(
+        {
+
+        },
+        dispatch
+    );
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(CommentsSection);

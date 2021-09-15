@@ -20,6 +20,7 @@ import { signIn, createAccount, signOut } from '../actions/users';
 import {
   createPins,
   getPins,
+  selectPin,
   GET_PINS_SUCCESS,
 } from '../actions/pins';
 
@@ -63,7 +64,7 @@ class HomeScreen extends React.Component {
         if (res.type === GET_PINS_SUCCESS) {
           // console.log('success in func ', res.payload)
         } else {
-          console.log('fail func')
+          console.log('fail getpins in homeScreen func')
         }
       })
 
@@ -93,7 +94,7 @@ class HomeScreen extends React.Component {
   }
 
   handleLocationSelected = async data => {
-    console.log('data', data)
+    console.log('location selected : ', data)
     const rando = await uuidv4();
 
     Geocoder.init(GOOGLE_GEOCODING_API_KEY);
@@ -119,14 +120,24 @@ class HomeScreen extends React.Component {
 
     await this.props.createPins(pins)
       .then(res => {
-        console.log('res', res)
+        console.log('res in createPins in HomeScreen ', res)
         if (res.type === 'CREATE_PINS_SUCCESS') {
-          console.log('back in function success')
+          console.log('back in function after create pins success')
         }
       })
   }
 
+  handleSelectPin = async pinId => {
+    await this.props.selectPin(pinId);
+
+    console.log('back in selectPin ', this.props.selectedPin)
+
+    this.props.navigation.navigate('ViewPin')
+  }
+
   render() {
+
+    console.log('HomeScreen re-render with pins ', this.props.pins)
     return (
       <View style={styles.container}>
         {this.state.loading ? (<ActivityIndicator />) : (
@@ -141,13 +152,14 @@ class HomeScreen extends React.Component {
               }}
             >
               {this.props.pins.map(pin => {
+                console.log('pin in HomeScreen mapping ', pin)
                 return (
                   <MapView.Marker
                     coordinate={{ longitude: pin.lng, latitude: pin.lat }}
                     title={pin.desc}
                     description={pin.desc}
                     key={pin.id}
-                    onPress={() => this.props.navigation.navigate('ViewPin', { pin })}
+                    onPress={() => this.handleSelectPin(pin.id)}
                   />
                 )
               })}
@@ -173,6 +185,7 @@ HomeScreen.navigationOptions = {
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
   pins: state.pins.pins,
+  selectedPin: state.pins.selectedPin
 });
 
 const mapDispatchToProps = dispatch =>
@@ -184,6 +197,7 @@ const mapDispatchToProps = dispatch =>
       signOut,
       createPins,
       getPins,
+      selectPin
     },
     dispatch
   );

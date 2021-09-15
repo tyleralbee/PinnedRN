@@ -51,7 +51,7 @@ const Comment = (props) => {
         comment
     } = props
 
-    console.log('comment', comment)
+    console.log('comment in Comment component: ', comment)
     return (
         <TouchableOpacity style={styles.commentContainer} onPress={() => console.log('Comment')}>
             <TouchableOpacity style={styles.commentPicture} onPress={() => console.log('Profile Picture')}>

@@ -8,7 +8,7 @@ import PinPicture from '../components/PinPicture';
 import LikeButton from '../components/LIkeButton';
 import PeopleIndicator from '../components/PeopleIndicator';
 import CommentsSection from '../components/CommentsSection';
-import { addComment } from '../actions/pins';
+import { addComment, getPins } from '../actions/pins';
 
 const styles = EStyleSheet.create({
     container: {
@@ -61,20 +61,13 @@ class ViewPinScreen extends React.Component {
         }))
 
     handleAddComment = async () => {
-        const {
-            marker
-        } = this.props.route.params
-
-        await this.props.addComment(marker.id, this.state.comment).then(res => console.log('res in fun, ', res))
-
-        console.log('end of func')
+        await this.props.addComment(this.props.selectedPin.id, this.state.comment).then(res => console.log('res in add comment fun in HomeScreen ', res))
+        console.log('end of addComment func')
     }
 
 
     render() {
-        const {
-            marker
-        } = this.props.route.params
+        console.log('ViewPinScreen re-render with pin ', this.props.selectedPin)
 
         return (
             <KeyboardAvoidingView
@@ -91,14 +84,14 @@ class ViewPinScreen extends React.Component {
                                 </Text>
                             </TouchableOpacity>
                             <Text style={styles.addressText}>
-                                {marker.description}
+                                {this.props.selectedPin.description}
                             </Text>
                             <PinPicture />
                             <View style={styles.likeContainer}>
                                 <PeopleIndicator />
                                 <LikeButton />
                             </View>
-                            <CommentsSection comments={marker.comments} handleChange={this.handleChange} handleAddComment={this.handleAddComment}/>
+                            <CommentsSection key={this.props.selectedPin.id} comments={this.props.selectedPin.comments} handleChange={this.handleChange} handleAddComment={this.handleAddComment}/>
                         </View>
                     )}
             </KeyboardAvoidingView>
@@ -108,12 +101,15 @@ class ViewPinScreen extends React.Component {
 }
 
 const mapStateToProps = state => ({
+    pins: state.pins.pins,
+    selectedPin: state.pins.selectedPin
 });
 
 const mapDispatchToProps = dispatch =>
     bindActionCreators(
         {
-            addComment
+            addComment,
+            getPins
         },
         dispatch
     );
