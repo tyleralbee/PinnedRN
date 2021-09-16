@@ -44,6 +44,7 @@ class HomeScreen extends React.Component {
 
   async componentDidMount() {
     await this._getLocationAsync()
+    this.setState({ loading: false })
 
     await this.props.getPins()
       .then(res => {
@@ -56,7 +57,6 @@ class HomeScreen extends React.Component {
         }
       })
 
-    this.setState({ loading: false })
   }
 
   _getLocationAsync = async () => {
@@ -93,6 +93,7 @@ class HomeScreen extends React.Component {
       lat: '',
       lng: '',
       comments: [],
+      likes: [],
       id: rando
     }
 

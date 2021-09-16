@@ -36,6 +36,7 @@ export const getPins = () => async dispatch => {
                         lat: doc.data().lat,
                         lng: doc.data().lng,
                         comments: doc.data().comments,
+                        likes: doc.data().likes,
                     }
 
                     pins.push(pin)
@@ -124,6 +125,76 @@ export const addComment = (pinId, comment) => async dispatch => {
         console.log('err in add comment', err)
         return dispatch({
             type: ADD_COMMENT_FAILURE,
+            payload: err,
+            error: true,
+        });
+    }
+};
+
+export const LIKE_REQUEST = 'LIKE_REQUEST';
+export const LIKE_SUCCESS = 'LIKE_SUCCESS';
+export const LIKE_FAILURE = 'LIKE_FAILURE';
+
+export const like = (pinId, userId) => async dispatch => {
+    dispatch({ type: LIKE_REQUEST });
+    const pinRef = db.collection('pins').doc(pinId);
+
+    try {
+        await pinRef.update({
+            likes: firebase.firestore.FieldValue.arrayUnion(userId)
+        }).then(res => {
+            console.log('Like returns res ', res)
+            dispatch({
+                userId,
+                pinId,
+                type: LIKE_SUCCESS,
+            })
+
+            return dispatch({
+                pinId,
+                type: SELECT_PIN,
+            })
+        })
+
+    } catch (err) {
+        console.log('err in like', err)
+        return dispatch({
+            type: LIKE_FAILURE,
+            payload: err,
+            error: true,
+        });
+    }
+};
+
+export const UNLIKE_REQUEST = 'UNLIKE_REQUEST';
+export const UNLIKE_SUCCESS = 'UNLIKE_SUCCESS';
+export const UNLIKE_FAILURE = 'UNLIKE_FAILURE';
+
+export const unLike = (pinId, userId) => async dispatch => {
+    dispatch({ type: UNLIKE_REQUEST });
+    const pinRef = db.collection('pins').doc(pinId);
+
+    try {
+        await pinRef.update({
+            likes: firebase.firestore.FieldValue.arrayRemove(pinId)
+        }).then(res => {
+            console.log('unlike returns res ', res)
+            dispatch({
+                userId,
+                pinId,
+                type: UNLIKE_SUCCESS,
+            })
+
+            return dispatch({
+                pinId,
+                type: SELECT_PIN,
+            })
+        })
+
+    } catch (err) {
+        console.log('err in unlike', err)
+        return dispatch({
+            type: UNLIKE_FAILURE,
             payload: err,
             error: true,
         });

@@ -4,7 +4,9 @@ import {
   GET_PINS_SUCCESS,
   CREATE_PINS_SUCCESS,
   ADD_COMMENT_SUCCESS,
-  SELECT_PIN
+  SELECT_PIN,
+  LIKE_SUCCESS,
+  UNLIKE_SUCCESS
 } from '../actions/pins';
 
 const initialState = {
@@ -49,8 +51,6 @@ export default (state = initialState, action) => {
     };
 
     case ADD_COMMENT_SUCCESS: {
-
-      
       console.log('in add comment reducer')
       const { comment } = action;
       console.log('comment in reducer : ', comment)
@@ -63,14 +63,57 @@ export default (state = initialState, action) => {
         return state
       }
 
-
-
       return update(state, {
         pins: {
           [pinIdx]: { 
             comments: {
               $push: [{ value: comment.value, id: comment.id, pinId: comment.pinId }]
             } 
+          },
+        },
+      })
+    };
+
+    case LIKE_SUCCESS: {
+      console.log('in like reducer')
+      const { userId, pinId } = action;
+      console.log('like in reducer : ', userId)
+
+      const pinIdx = state.pins.findIndex(pin => pin.id === pinId);
+
+      console.log('pinIdx in reducer : ', pinIdx)
+
+      if (pinIdx === -1) {
+        return state
+      }
+
+      return update(state, {
+        pins: {
+          [pinIdx]: { 
+            likes: {
+              $push: [pinId]
+            } 
+          },
+        },
+      })
+    };
+
+    case UNLIKE_SUCCESS: {
+      console.log('in unlike reducer')
+      const { userId, pinId } = action;
+      console.log('unlike in reducer : ', userId)
+
+      const pinIdx = state.pins.findIndex(pin => pin.id === pinId);
+      console.log('pinIdx in reducer : ', pinIdx)
+
+      if (pinIdx === -1) {
+        return state
+      }
+
+      return update(state, {
+        pins: {
+          [pinIdx]: { 
+            likes: arr => arr.filter(id => id != userId),
           },
         },
       })

@@ -7,10 +7,15 @@ import {
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { fontStyles } from '../constants/Fonts';
 import Icon from 'react-native-vector-icons/FontAwesome';
-const myIcon = <Icon name="heart" size={36} color="red"/>;
+const likedIcon = <Icon name="heart" size={36} color="red" />;
+const unLikedIcon = <Icon name="heart-o" size={36} color="red" style={'regular'}/>;
 
 
 const styles = EStyleSheet.create({
+    likeButtonAndCounterContainer: {
+        flexDirection: 'row',
+
+    },
     likeButton: {
         width: '3rem',
         height: '3rem',
@@ -24,14 +29,21 @@ const styles = EStyleSheet.create({
 
 const LikeButton = (props) => {
     const {
-        handlePress
+        handlePress,
+        likesArr,
+        liked,
     } = props
 
 
     return (
-        <TouchableOpacity style={styles.likeButton} onPress={() => console.log('LikeButton')}>
-            {myIcon}
-        </TouchableOpacity>
+        <View style={styles.likeButtonAndCounterContainer}>
+            <TouchableOpacity style={styles.likeButton} onPress={() => handlePress()}>
+                { liked ? likedIcon : unLikedIcon }
+            </TouchableOpacity>
+            <Text>
+                {likesArr.length}
+            </Text>
+        </View>
     );
 };
 

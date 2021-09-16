@@ -8,7 +8,7 @@ import PinPicture from '../components/PinPicture';
 import LikeButton from '../components/LIkeButton';
 import PeopleIndicator from '../components/PeopleIndicator';
 import CommentsSection from '../components/CommentsSection';
-import { addComment, getPins } from '../actions/pins';
+import { addComment, getPins, like, unLike } from '../actions/pins';
 
 const styles = EStyleSheet.create({
     container: {
@@ -65,9 +65,22 @@ class ViewPinScreen extends React.Component {
         console.log('end of addComment func')
     }
 
+    handleLike = async () => {
+        await this.props.like(this.props.selectedPin.id, 'userId').then(res => console.log('res in like func in HomeScreen ', res))
+        console.log('end of like func')
+    }
+
+    handleUnlike = async () => {
+        await this.props.unLike(this.props.selectedPin.id, 'userId').then(res => console.log('res in unLike func in HomeScreen ', res))
+        console.log('end of unLike func')
+    }
+
 
     render() {
+
         console.log('ViewPinScreen re-render with pin ', this.props.selectedPin)
+
+        const liked = this.props.selectedPin.likes.includes('userId')
 
         return (
             <KeyboardAvoidingView
@@ -89,7 +102,7 @@ class ViewPinScreen extends React.Component {
                             <PinPicture />
                             <View style={styles.likeContainer}>
                                 <PeopleIndicator />
-                                <LikeButton />
+                                <LikeButton handlePress={liked ? this.handleUnlike : this.handleLike} likesArr={this.props.selectedPin.likes} liked={liked}/>
                             </View>
                             <CommentsSection key={this.props.selectedPin.id} comments={this.props.selectedPin.comments} handleChange={this.handleChange} handleAddComment={this.handleAddComment}/>
                         </View>
@@ -109,7 +122,9 @@ const mapDispatchToProps = dispatch =>
     bindActionCreators(
         {
             addComment,
-            getPins
+            getPins,
+            like,
+            unLike,
         },
         dispatch
     );
