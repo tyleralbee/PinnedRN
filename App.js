@@ -1,24 +1,23 @@
-import React, { useState } from 'react';
-import { Platform, StatusBar, View } from 'react-native';
-import { Provider } from 'react-redux';
-import EStyleSheet from 'react-native-extended-stylesheet';
-
-import AppLoading from 'expo-app-loading';
-import * as Font from 'expo-font';
-import { Asset } from 'expo-asset';
 import { Ionicons } from '@expo/vector-icons';
-
-import HomeScreen from './screens/HomeScreen';
-import SignInScreen from './screens/SignInScreen';
-
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import AppLoading from 'expo-app-loading';
+import { Asset } from 'expo-asset';
+import * as Font from 'expo-font';
+import React, { useState } from 'react';
+import { Platform, StatusBar, View } from 'react-native';
+import DropdownAlert from 'react-native-dropdownalert';
+import EStyleSheet from 'react-native-extended-stylesheet';
+import { Provider } from 'react-redux';
 
-import { store } from './store';
+import DropDownHolder from './helpers/dropdownHolder';
+import HomeScreen from './screens/HomeScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import SignInScreen from './screens/SignInScreen';
 import ViewPinScreen from './screens/ViewPinScreen';
+import { store } from './store';
 
-EStyleSheet.build({ $textColor: '#0275d8' });
+EStyleSheet.build({});
 
 const Stack = createStackNavigator();
 const styles = EStyleSheet.create({
@@ -62,20 +61,25 @@ export default function App(props) {
     );
   } else {
     return (
-      <Provider store={store}>
-        <View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <NavigationContainer>
-            <Stack.Navigator initialRouteName="Home" screenOptions={{headerShown: false}}>
-              <Stack.Screen name="Home" component={HomeScreen} />
-              <Stack.Screen name="SignIn" component={SignInScreen} />
-              <Stack.Screen name="Profile" component={ProfileScreen} />
-              <Stack.Screen name="ViewPin" component={ViewPinScreen} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </View>
-      </Provider>
-
+      <>
+        <Provider store={store}>
+          <View style={styles.container}>
+            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+            <NavigationContainer>
+              <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="Home" component={HomeScreen} />
+                <Stack.Screen name="Profile" component={ProfileScreen} />
+                <Stack.Screen name="SignIn" component={SignInScreen} />
+                <Stack.Screen name="ViewPin" component={ViewPinScreen} />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </View>
+        </Provider>
+        <DropdownAlert
+          ref={ref => DropDownHolder.setDropDown(ref)}
+          updateStatusBar={false}
+        />
+      </>
     );
   }
 }

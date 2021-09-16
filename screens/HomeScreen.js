@@ -1,39 +1,28 @@
+import * as Location from 'expo-location';
 import React from 'react';
 import {
-  Dimensions,
-  Text,
-  TouchableOpacity,
   ActivityIndicator,
   View,
 } from 'react-native';
+import EStyleSheet from 'react-native-extended-stylesheet';
 import MapView from 'react-native-maps';
-
-import * as Location from 'expo-location';
-
+import Geocoder from 'react-native-geocoding';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { v4 as uuidv4 } from 'uuid';
 
-import Geocoder from 'react-native-geocoding';
-
-// actions
 import { signIn, createAccount, signOut } from '../actions/users';
+import PinLocationBar from '../components/PinLocationBar';
+import ProfileButton from '../components/ProfileButton';
+import SearchLocationBar from '../components/SearchLocationBar';
 import {
   createPins,
   getPins,
   selectPin,
   GET_PINS_SUCCESS,
 } from '../actions/pins';
-
-import { fontStyles } from '../constants/Fonts';
-import { GOOGLE_PLACES_API_KEY, GOOGLE_GEOCODING_API_KEY } from '../config/google-config';
-
-import EStyleSheet from 'react-native-extended-stylesheet';
-import PinLocationBar from '../components/PinLocationBar';
-import SearchLocationBar from '../components/SearchLocationBar';
-import ProfileButton from '../components/ProfileButton';
-
-import { v4 as uuidv4 } from 'uuid';
-
+import { GOOGLE_GEOCODING_API_KEY } from '../config/google-config';
+import DropDownHolder from '../helpers/dropdownHolder';
 
 const styles = EStyleSheet.create({
   container: {
@@ -47,24 +36,23 @@ const styles = EStyleSheet.create({
 
 class HomeScreen extends React.Component {
   state = {
+    errorMessage: null,
     loading: true,
     location: null,
-    errorMessage: null,
     locationBar: false,
   };
 
   async componentDidMount() {
     await this._getLocationAsync()
-    // this.props.becomeUser('User1')
-    // this.props.createAccount('tyleralbee25@gmail.com', 'pinned');
-    // this.props.signIn('tyleralbee25@gmail.com', 'pinned');
-    // this.props.signOut();
+
     await this.props.getPins()
       .then(res => {
-        if (res.type === GET_PINS_SUCCESS) {
-          // console.log('success in func ', res.payload)
-        } else {
-          console.log('fail getpins in homeScreen func')
+        if (res.type !== GET_PINS_SUCCESS) {
+          return DropDownHolder.dropDown.alertWithType(
+            'error',
+            'Error',
+            'There was a problem getting your pins. Are you connected to the internet?'
+          );
         }
       })
 
@@ -164,9 +152,9 @@ class HomeScreen extends React.Component {
                 )
               })}
             </MapView>
-            <ProfileButton handlePress={this.props.navigation.navigate}/>
+            <ProfileButton handlePress={this.props.navigation.navigate} />
             {this.state.locationBar ? (
-              <SearchLocationBar handlePress={this.handleToggleLocationBar} handleLocationSelected={this.handleLocationSelected}/>
+              <SearchLocationBar handlePress={this.handleToggleLocationBar} handleLocationSelected={this.handleLocationSelected} />
             ) : (
               <PinLocationBar handlePress={this.handleToggleLocationBar} />
             )}
