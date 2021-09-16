@@ -9,7 +9,6 @@ import { Asset } from 'expo-asset';
 import { Ionicons } from '@expo/vector-icons';
 
 import HomeScreen from './screens/HomeScreen';
-import DropPinScreen from './screens/DropPinScreen';
 import SignInScreen from './screens/SignInScreen';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -69,7 +68,6 @@ export default function App(props) {
           <NavigationContainer>
             <Stack.Navigator initialRouteName="Home" screenOptions={{headerShown: false}}>
               <Stack.Screen name="Home" component={HomeScreen} />
-              <Stack.Screen name="DropPin" component={DropPinScreen} />
               <Stack.Screen name="SignIn" component={SignInScreen} />
               <Stack.Screen name="Profile" component={ProfileScreen} />
               <Stack.Screen name="ViewPin" component={ViewPinScreen} />

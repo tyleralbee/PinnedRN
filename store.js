@@ -6,7 +6,6 @@ import {
   createReactNavigationReduxMiddleware
 } from "react-navigation-redux-helpers";
 
-import AppNavigator from "./navigation/AppNavigator";
 import appReducer from "./reducers";
 
 // Note: createReactNavigationReduxMiddleware must be run before reduxifyNavigator
